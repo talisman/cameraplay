@@ -29,50 +29,64 @@ class movingcircle(object):
             self.yp = 0
         if (self.yp<0):
             self.yp=height
+#----------------
 nC = 72
 mCircles=[]
 cr = 12
 vw = 1280
 vh = 720
+#----------------
 def setup():
-    size(1280, 780)
+    size(1280, 720)
     for x in range(nC):
         mCircles.append(movingcircle())
         mCircles[x].setpos(random(width),random(height))
     global video
-    global vw
-    global vh
-    video = Capture(this,vw, vh)
+    # global vw
+    # global vh
+    video = Capture(this,width, height)
     video.start()
     global f
-    f = createFont("Helvetica", 28, True) 
-
+    f = createFont("Helvetica", 36, True) 
+#----------------
 def draw():
     loadPixels()
     global video
-    global vw
-    global vh
-#
+    # global vw
+    # global vh
+#----------------
     video.loadPixels()
-    cr = map(mouseX, 0, width, 6, 24)
+    #background(255)
+    rt = 0
+    gt = 0
+    bt = 0
+    c = 0
+    cr = map(mouseX, 0, width, 4, 24)
     for x in range(nC):
        # mCircles[x].display()
         mCircles[x].move()
-    for y in xrange(0,vh,cr):
-        for x in xrange(0,vw,cr):
+    for y in xrange(0,height,cr):
+        for x in xrange(0,width,cr):
+            c+=1
             loc = x + y*width
             r = red(video.pixels[loc])
+            rt+=r
             g = green(video.pixels[loc])
+            gt+=g
             b = blue(video.pixels[loc])
+            bt +=b
             fill(r,g,b,125)
             noStroke()
             ellipse(x,y,cr,cr)
-    strokeWeight(10)
-    stroke(0)
-    line(0,vh,width,vh)
-    textFont(f,26)
-    
-    text("Hello Strings!",10,740)
 
+    fill(0)
+    textFont(f,36)
+    noStroke()
+   # rect(0,740,width,40)
+    fill(255)
+    s = "r:" + str(int(bt/c)) + " g: " + str(int(gt/c)) +" b: " + str(int(bt/c)) 
+    #s = str(bt/c)
+    text(s,30,600)
+#----------------
 def captureEvent(c):
     c.read()
